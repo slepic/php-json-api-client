@@ -1,0 +1,38 @@
+{
+    "name": "slepic/json-api-client",
+    "description": "A simple PSR compatible JSON HTTP API client",
+    "keywords": ["JSON", "API", "Client", "PSR", "REST", "HTTP"],
+    "homepage": "https://github.com/slepic/php-json-api-client",
+    "type": "library",
+    "require": {
+        "php": ">=7.4",
+        "ext-json": "*",
+        "psr/http-factory": "^1.0",
+        "psr/http-client": "^1.0",
+        "slexphp/json-serialization": "dev-master"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "slepic",
+            "email": "gslepic@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Slepic\\Http\\JsonApiClient\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Slepic\\Tests\\Http\\JsonApiClient\\": "tests/"
+        }
+    },
+    "require-dev": {
+        "vimeo/psalm": "^4.2",
+        "phpunit/phpunit": "^9.5",
+        "http-interop/http-factory-guzzle": "^1.0"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
