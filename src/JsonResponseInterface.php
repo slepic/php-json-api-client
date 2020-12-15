@@ -23,6 +23,11 @@ interface JsonResponseInterface
     public function getHeaderLine(string $name): string;
 
     /**
+     * @return string
+     */
+    public function getRawBody(): string;
+
+    /**
      * @return array<mixed> Associative array representation of the response json body.
      */
     public function getParsedBody(): array;

@@ -63,7 +63,6 @@ class JsonClient implements JsonClientInterface
                 throw new JsonClientException(
                     'Cannot encode input json: ' . $e->getMessage(),
                     null,
-                    '',
                     false,
                     $e
                 );
@@ -79,7 +78,6 @@ class JsonClient implements JsonClientInterface
             throw new JsonClientException(
                 "Failed request $method $uri: " . $e->getMessage(),
                 null,
-                '',
                 false,
                 $e
             );
@@ -98,8 +96,7 @@ class JsonClient implements JsonClientInterface
             if ($contentType && \strpos($contentType, 'application/json') === false) {
                 throw new JsonClientException(
                     "Cannot decode response json of $method $uri, because content-type is $contentType",
-                    new JsonResponse($status, $responseHeaders, []),
-                    $responseBody,
+                    new JsonResponse($status, $responseHeaders, $responseBody, []),
                     false
                 );
             }
@@ -109,8 +106,7 @@ class JsonClient implements JsonClientInterface
             } catch (DecodeExceptionInterface $e) {
                 throw new JsonClientException(
                     "Could not decode json response of $method $uri ($status): " . $e->getMessage(),
-                    new JsonResponse($status, $responseHeaders, []),
-                    $responseBody,
+                    new JsonResponse($status, $responseHeaders, $responseBody, []),
                     false,
                     $e
                 );
@@ -119,8 +115,7 @@ class JsonClient implements JsonClientInterface
             if (!\is_array($responseJson)) {
                 throw new JsonClientException(
                     "JSON response does not contain array or object for $method $uri ($status)",
-                    new JsonResponse($status, $responseHeaders, []),
-                    $responseBody,
+                    new JsonResponse($status, $responseHeaders, $responseBody, []),
                     false
                 );
             }
@@ -129,12 +124,11 @@ class JsonClient implements JsonClientInterface
         if ($status < 200 || $status >= 300) {
             throw new JsonClientException(
                 "Received error status code $status for $method $uri",
-                new JsonResponse($status, $responseHeaders, $responseJson),
-                $responseBody,
+                new JsonResponse($status, $responseHeaders, $responseBody, $responseJson),
                 true
             );
         }
 
-        return new JsonResponse($status, $responseHeaders, $responseJson);
+        return new JsonResponse($status, $responseHeaders, $responseBody, $responseJson);
     }
 }

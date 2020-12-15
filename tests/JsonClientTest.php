@@ -75,6 +75,7 @@ class JsonClientTest extends TestCase
         self::assertSame(203, $output->getStatusCode());
         self::assertSame('application/json', $output->getHeaderLine('Content-Type'));
         self::assertSame('my value', $output->getHeaderLine('x-some-header'));
+        self::assertSame('{"response":"value"}', $output->getRawBody());
         self::assertSame(['response' => 'value'], $output->getParsedBody());
     }
 }

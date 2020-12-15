@@ -25,9 +25,4 @@ interface JsonClientExceptionInterface extends \Throwable
      *      If the body was empty or unable to be parsed, getParsedBody of the response object must return empty array.
      */
     public function hasParsedBody(): bool;
-
-    /**
-     * @return string Raw body contents string
-     */
-    public function getRawBody(): string;
 }

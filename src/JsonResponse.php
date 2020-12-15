@@ -8,18 +8,21 @@ class JsonResponse implements JsonResponseInterface
 {
     private int $status;
     private array $headers;
-    private array $body;
+    private string $rawBody;
+    private array $parsedBody;
 
     /**
      * @param int $status
      * @param string[] $headers Lower case header names
-     * @param array<mixed> $body
+     * @param string $rawBody
+     * @param array<mixed> $parsedBody
      */
-    public function __construct(int $status, array $headers, array $body)
+    public function __construct(int $status, array $headers, string $rawBody, array $parsedBody)
     {
         $this->status = $status;
         $this->headers = $headers;
-        $this->body = $body;
+        $this->rawBody = $rawBody;
+        $this->parsedBody = $parsedBody;
     }
 
     public function getStatusCode(): int
@@ -37,8 +40,13 @@ class JsonResponse implements JsonResponseInterface
         return $this->headers[\strtolower($name)] ?? '';
     }
 
+    public function getRawBody(): string
+    {
+        return $this->rawBody;
+    }
+
     public function getParsedBody(): array
     {
-        return $this->body;
+        return $this->parsedBody;
     }
 }
