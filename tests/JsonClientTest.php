@@ -13,6 +13,8 @@ use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
 use Slepic\Http\JsonApiClient\JsonClient;
 use Slepic\Http\JsonApiClient\JsonClientInterface;
+use Slexphp\Serialization\Contracts\Decoder\DecoderInterface;
+use Slexphp\Serialization\Contracts\Encoder\EncoderInterface;
 
 class JsonClientTest extends TestCase
 {
@@ -20,7 +22,9 @@ class JsonClientTest extends TestCase
     {
         $psrRequestFactory = self::createMock(RequestFactoryInterface::class);
         $psrClient = self::createMock(ClientInterface::class);
-        $jsonClient = new JsonClient($psrRequestFactory, $psrClient);
+        $encoder = self::createMock(EncoderInterface::class);
+        $decoder = self::createMock(DecoderInterface::class);
+        $jsonClient = new JsonClient($psrRequestFactory, $psrClient, $encoder, $decoder);
         self::assertInstanceOf(JsonClientInterface::class, $jsonClient);
     }
 
@@ -33,6 +37,9 @@ class JsonClientTest extends TestCase
 
         $psrRequestFactory = new RequestFactory();
         $psrClient = self::createMock(ClientInterface::class);
+        $encoder = self::createMock(EncoderInterface::class);
+        $decoder = self::createMock(DecoderInterface::class);
+
         $psrClient->expects(self::once())
             ->method('sendRequest')
             ->with(new Callback(function (RequestInterface $request) {
@@ -44,7 +51,17 @@ class JsonClientTest extends TestCase
             }))
             ->willReturn($response);
 
-        $jsonClient = new JsonClient($psrRequestFactory, $psrClient);
+        $encoder->expects(self::once())
+            ->method('encode')
+            ->with(['json' => 'data'])
+            ->willReturn('{"json":"data"}');
+
+        $decoder->expects(self::once())
+            ->method('decode')
+            ->with('{"response":"value"}')
+            ->willReturn(['response' => 'value']);
+
+        $jsonClient = new JsonClient($psrRequestFactory, $psrClient, $encoder, $decoder);
 
         $output = $jsonClient->call(
             'http://example.com',
